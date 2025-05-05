@@ -16,10 +16,10 @@ timezone: Asia/Shanghai
 
 title: maojh15的主页 # the main title
 
-tagline: 数理小站 # it will display as the subtitle
+tagline: 数理&算法小站 # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
-  A minimal, responsive and feature-rich Jekyll theme for technical writing.
+  细推物理须行乐，何用浮名绊此身。
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
