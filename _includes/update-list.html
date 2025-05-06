@@ -26,15 +26,38 @@
   <section id="access-lastmod">
     <h2 class="panel-heading">{{- site.data.locales[include.lang].panel.lastmod -}}</h2>
     <ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2">
-      {% for item in update_list %}
-        {% assign index = item | split: '::' | last | plus: 0 %}
-        {% assign post = site.posts[index] %}
-        {% assign url = post.url | relative_url %}
-        <li class="text-truncate lh-lg">
-          <a href="{{ url }}">{{ post.title }}</a>
-        </li>
+    {% assign days_map = "Sunday:星期日,Monday:星期一,Tuesday:星期二,Wednesday:星期三,Thursday:星期四,Friday:星期五,Saturday:星期六" | split: ',' %}
+    {% for item in update_list %}
+      {% assign index = item | split: '::' | last | plus: 0 %}
+      {% assign post = site.posts[index] %}
+      {% assign url = post.url | relative_url %}
+      {% assign update_time = post.date %}
+      {% if post.last_modified_at %}
+        {% assign update_time = post.last_modified_at %}
+      {% endif %}
+      {% assign weekday_en = update_time | date: '%A' %}
+      {% assign weekday_cn = '' %}
+      {% for day in days_map %}
+        {% assign pair = day | split: ':' %}
+        {% if pair[0] == weekday_en %}
+          {% assign weekday_cn = pair[1] %}
+        {% endif %}
       {% endfor %}
+      <li class="text-truncate lh-lg">
+        <a href="{{ url }}" data-bs-toggle="tooltip" data-bs-placement="top" 
+            title="{{ update_time | date: '%Y年%m月%d日' }} {{ weekday_cn }} {{ update_time | date: '%H:%M' }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
     </ul>
   </section>
   <!-- #access-lastmod -->
 {% endif %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  });
+</script>

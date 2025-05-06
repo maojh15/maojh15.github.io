@@ -227,3 +227,5 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+launch_date: 2025-05-05  # The date when the site was launched

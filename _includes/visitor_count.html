@@ -1,0 +1,30 @@
+<div class="access">
+  <section>
+  <h2 class="panel-heading">网站资讯</h2>
+    <!-- pageviews -->
+    <div>本站总访问量<span id="vercount_value_site_pv"></span>次</div>
+    <div>本站总访客数<span id="vercount_value_site_uv"></span>人</div>
+
+    <br/>
+    <!-- 文章总数 -->
+    <div>总文章数: {{ site.posts.size }}</div>
+
+    <!-- 网站运行时间 -->
+    {% assign launch_date = site.launch_date | date: "%s" %}
+    {% assign current_date = "now" | date: "%s" %}
+    {% assign seconds_running = current_date | minus: launch_date %}
+    {% assign days_running = seconds_running | divided_by: 86400 %}
+    <div>网站已运行: {{ days_running }} 天</div>
+
+    <!-- 最近更新 -->
+    {% if site.posts.size > 0 %}
+      {% assign latest_update = site.posts.first.date %}
+      {% for post in site.posts %}
+        {% if post.last_modified_at and post.last_modified_at > latest_update %}
+          {% assign latest_update = post.last_modified_at %}
+        {% endif %}
+      {% endfor %}
+      <div>最近更新: {{ latest_update | date: "%Y-%m-%d" }}</div>
+    {% endif %}
+</section>
+</div>
