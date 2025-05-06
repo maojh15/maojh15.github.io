@@ -35,6 +35,7 @@ script_includes:
           {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
         </span>
       {% endif %}
+      <span>本文总阅读量<span id="vercount_value_page_pv"></span>次</span>
 
       {% if page.image %}
         {% capture src %}src="{{ page.image.path | default: page.image }}"{% endcapture %}
@@ -90,7 +91,6 @@ script_includes:
               {{ site.data.locales[lang].post.pageview_measure }}
             </span>
           {% endif %}
-
           <!-- read time -->
           {% include read-time.html content=content prompt=true lang=lang %}
         </div>

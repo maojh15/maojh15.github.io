@@ -30,7 +30,7 @@ panel:
 copyright:
   # Shown at the bottom of the post
   license:
-    template: This post is licensed under :LICENSE_NAME by the author.
+    template: This post is licensed under :LICENSE_NAME by the author. Please indicate the source when reprinting.
     name: CC BY-NC-SA 4.0
     link: https://creativecommons.org/licenses/by-nc-sa/4.0/
 
