@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Hexo编辑Markdown的问题及解决方案 | maojh15的主页</title><meta name="author" content="maojh15"><meta name="copyright" content="maojh15"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用Hexo框架，编写Markdown时遇到了一些坑，现将解决方案记录在此以备查阅。(标题带删除线的章节，代表方案有变更，不再使用) 使用pandoc解析markdown pandoc介绍见 pandoc官网。 卸载已有的解析器(包括hexo-renderer-marked, hexo-renderer-kramed, hexo-renderer-marked-it等)，安装hexo-render">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo编辑Markdown的问题及解决方案">
+<meta property="og:url" content="https://maojh15.github.io/posts/e96c27b831e9/index.html">
+<meta property="og:site_name" content="maojh15的主页">
+<meta property="og:description" content="使用Hexo框架，编写Markdown时遇到了一些坑，现将解决方案记录在此以备查阅。(标题带删除线的章节，代表方案有变更，不再使用) 使用pandoc解析markdown pandoc介绍见 pandoc官网。 卸载已有的解析器(包括hexo-renderer-marked, hexo-renderer-kramed, hexo-renderer-marked-it等)，安装hexo-render">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://maojh15.github.io/assets/avarta.png">
+<meta property="article:published_time" content="2025-05-15T17:26:42.000Z">
+<meta property="article:modified_time" content="2025-05-17T06:13:16.637Z">
+<meta property="article:author" content="maojh15">
+<meta property="article:tag" content="数理,算法,物理,计算机,编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://maojh15.github.io/assets/avarta.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Hexo编辑Markdown的问题及解决方案",
+  "url": "https://maojh15.github.io/posts/e96c27b831e9/",
+  "image": "https://maojh15.github.io/assets/avarta.png",
+  "datePublished": "2025-05-15T17:26:42.000Z",
+  "dateModified": "2025-05-17T06:13:16.637Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "maojh15",
+      "url": "https://maojh15.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/assets/img/favicons/favicon.svg"><link rel="canonical" href="https://maojh15.github.io/posts/e96c27b831e9/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//cn.vercount.one/js"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?2c685f728392b47405c6c9104b22818a";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+btf.addGlobalFn('pjaxComplete', () => {
+  _hmt.push(['_trackPageview',window.location.pathname])
+}, 'baidu_analytics')
+</script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":150,"languages":{"author":"作者: maojh15","link":"链接: ","source":"来源: maojh15的主页","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Hexo编辑Markdown的问题及解决方案',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/butterfly/css/costum_style.css"><link rel="stylesheet" href="/butterfly/css/beautified.css"><meta name="generator" content="Hexo 7.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/avarta.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/avarta.png" alt="Logo"><span class="site-name">maojh15的主页</span></a><a class="nav-page-title" href="/"><span class="site-name">Hexo编辑Markdown的问题及解决方案</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Hexo编辑Markdown的问题及解决方案</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-05-15T17:26:42.000Z" title="发表于 2025-05-16 01:26:42">2025-05-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-05-17T06:13:16.637Z" title="更新于 2025-05-17 14:13:16">2025-05-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%B6%E4%BB%96/">其他</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%85%B6%E4%BB%96/%E5%BB%BA%E7%AB%99%E7%9B%B8%E5%85%B3/">建站相关</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="vercount_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><p>使用Hexo框架，编写Markdown时遇到了一些坑，现将解决方案记录在此以备查阅。(标题带<del>删除线</del>的章节，代表方案有变更，不再使用)</p>
+<h2 id="使用pandoc解析markdown">使用pandoc解析markdown</h2>
+<p>pandoc介绍见 <a target="_blank" rel="noopener" href="https://pandoc.org">pandoc官网</a>。</p>
+<p>卸载已有的解析器(包括<code>hexo-renderer-marked</code>,
+<code>hexo-renderer-kramed</code>,
+<code>hexo-renderer-marked-it</code>等)，安装<code>hexo-renderer-pandoc</code>,</p>
+<p>在<code>hexo</code>配置文件<code>_config.yaml</code>添加<code>pandoc</code>设置<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pandoc:</span></span><br><span class="line">  <span class="attr">args:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;-f&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;commonmark_x&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;-t&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;html&#x27;</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;--mathjax&#x27;</span></span><br><span class="line">  <span class="attr">extensions:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;-implicit_figures&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>-f</code>选项是输入的markdown格式，<code>-t</code>选项是输出格式，加入<code>--mathjax</code>支持数学公式。</p>
+<h3
+id="解决mathjax加载渲染公式过慢的问题">解决mathjax加载渲染公式过慢的问题</h3>
+<p>mathjax加载慢会导致打开网页时，公式会短暂地显示为Tex代码，想快速加载公式，可以使用插件<code>hexo-filter-mathjax</code>，在服务端渲染。这会在hexo
+generate的过程中，将公式转换为svg矢量图，直接显示到网页上。</p>
+<p>在<code>_config.yaml</code>添加插件参数配置：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># setting for hexo-filter-mathjax</span></span><br><span class="line"><span class="attr">mathjax:</span></span><br><span class="line">  <span class="attr">tags:</span> <span class="string">all</span> <span class="comment"># or &#x27;ams&#x27; or &#x27;all&#x27;</span></span><br><span class="line">  <span class="attr">single_dollars:</span> <span class="literal">true</span> <span class="comment"># enable single dollar signs as in-line math delimiters</span></span><br><span class="line">  <span class="attr">cjk_width:</span> <span class="number">0.9</span> <span class="comment"># relative CJK char width</span></span><br><span class="line">  <span class="attr">normal_width:</span> <span class="number">0.6</span> <span class="comment"># relative normal (monospace) width</span></span><br><span class="line">  <span class="attr">append_css:</span> <span class="literal">true</span> <span class="comment"># add CSS to pages rendered by MathJax</span></span><br><span class="line">  <span class="attr">every_page:</span> <span class="literal">false</span> <span class="comment"># if true, every page will be rendered by MathJax regardless the `mathjax` setting in Front-matter</span></span><br><span class="line">  <span class="attr">packages:</span> <span class="comment"># extra packages to load</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">physics</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">mathtools</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">color</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">noerror</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">amsmath</span></span><br><span class="line">  <span class="attr">extension_options:</span> &#123;&#125;</span><br><span class="line">    <span class="comment"># you can put your extension options here</span></span><br><span class="line">    <span class="comment"># see http://docs.mathjax.org/en/latest/options/input/tex.html#tex-extension-options for more detail</span></span><br></pre></td></tr></table></figure>
+
+<p>存在的问题是当公式过长时，渲染出的svg图片会溢出所在容器 <img
+src="/assets/img/post/hexo-with-markdown/eq_overflow.png"
+alt="公式过长，溢出容器区域" /></p>
+<p>在配置文件中<code>_config.butterfly.yml</code>中开启数学选项</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">math:</span></span><br><span class="line">  <span class="comment"># Choose: mathjax, katex</span></span><br><span class="line">  <span class="comment"># Leave it empty if you don&#x27;t need math</span></span><br><span class="line">  <span class="attr">use:</span> <span class="string">mathjax</span></span><br><span class="line">  <span class="attr">per_page:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">hide_scrollbar:</span> <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">mathjax:</span></span><br><span class="line">    <span class="comment"># Enable the contextual menu</span></span><br><span class="line">    <span class="attr">enableMenu:</span> <span class="literal">true</span></span><br><span class="line">    <span class="comment"># Choose: all / ams / none, This controls whether equations are numbered and how</span></span><br><span class="line">    <span class="attr">tags:</span> <span class="string">all</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">katex:</span></span><br><span class="line">    <span class="comment"># Enable the copy KaTeX formula</span></span><br><span class="line">    <span class="attr">copy_tex:</span> <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>可以为过长公式添加横向scrollbar解决公式溢出问题 <img
+src="/assets/img/post/hexo-with-markdown/long_eq_woth_scrollbar.png"
+alt="带有scrollbar的长公式" /></p>
+<p>虽然没有理解为什么，这样的设置和<code>hexo-filter-mathjax</code>作者要求的关闭网站配置中使用<code>mathjax</code>的选项相违背(见下图<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>)，不过问题先这样解决了。</p>
+<p><img
+src="/assets/img/post/hexo-with-markdown/filter_mathjax_github_page.png"
+alt="hexo-filter-mathjax github主页的说明" /></p>
+<h2
+id="markdown代码换行渲染结果也换行的问题">Markdown代码换行渲染结果也换行的问题</h2>
+<p>问题：在markdown代码中换行，渲染结果也跟着换行。这不符合通常markdown的规则。通常在markdown代码中换行，是不会渲染出换行的。否则如果要写很长的一段文本，就必须写在同一行中，不方便编辑维护。</p>
+<p>关于这个问题搜到一个解决方案<a href="#fn3" class="footnote-ref"
+id="fnref3"
+role="doc-noteref"><sup>3</sup></a>。链接里的方法是针对使用了<code>hexo-renderer-marked</code>解析器的情况。在我的配置中使用的是<code>kramed</code>解析器，对链接中的配置方案稍作修改：即在hexo配置文件<code>_config.yaml</code>中，加入一下配置代码：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kramed:</span></span><br><span class="line">  <span class="attr">gfm:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">pedantic:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">sanitize:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">tables:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">breaks:</span> <span class="literal">false</span></span><br><span class="line">  <span class="attr">smartLists:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">smartypants:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">modifyAnchors:</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">  <span class="attr">autolink:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>重新生成网页
+<code>hexo clean &amp;&amp; hexo serve</code>，刷新网页即可看到回车问题已修复。</p>
+<h3
+id="markdown中中文句子换行渲染结果出现多余空格">markdown中中文句子换行，渲染结果出现多余空格</h3>
+<p>还剩下一个问题就是在写markdown时中文换行，渲染结果会多出一个空格。</p>
+<p>例如</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">换行</span><br><span class="line">渲染出现空格</span><br></pre></td></tr></table></figure>
+
+<p>渲染结果：</p>
+<p><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/img/post/hexo-with-markdown/render_result.png" width="200"
+title="Fig: Result of markdown render"></p>
+<p>这可能是为英文写作而设计的，换行前后的单词之间在渲染结果中插入空格来隔开两个单词，使用中文写作时空格就多余了。目前没有找到很好的解决方案，可以只在标点符号后换行来规避，因为标点符号后多出的空格在视觉上不明显。或者开启编辑器的自动换行(word
+wrap)功能，编写时一整段文字写在同一行中。</p>
+<hr />
+<div class="note warning moderen flat"><p>以下是已弃用的方案</p>
+</div>
+
+<h2 id="markdown公式无法渲染"><del>Markdown公式无法渲染</del></h2>
+<p>(<strong>更新</strong>：更换 <code>pandoc</code> +
+<code>hexo-filter-mathjax</code> 后问题解决)</p>
+<p>由于Katex还未能支持公式编号引用<a href="#fn4" class="footnote-ref"
+id="fnref4" role="doc-noteref"><sup>4</sup></a> <a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> <a
+href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a>，本站使用了mathjax解析器。Markdown公式有时无法渲染带下标的公式，例如<code>E_&#123;mn&#125;</code>，也无法识别公式内的换行符号<code>\\</code>。</p>
+<p>参考 <a
+target="_blank" rel="noopener" href="https://www.jianshu.com/p/7ab21c7f0674">在Hexo中渲染MathJax数学公式</a>
+中的方案可解决。</p>
+<p>步骤如下：</p>
+<ul>
+<li>第一步：将Hexo原有的markdown渲染器marked换成kramed</li>
+</ul>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall hexo-renderer-marked --save</span><br><span class="line">npm install hexo-renderer-kramed --save</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二步：修改kramed转义规则</li>
+</ul>
+<p>找到文件 <code>node_modules\kramed\lib\rules\inline.js</code>
+修改第11行的<code>escape</code>变量值，取消对<code>\,&#123;,&#125;</code>对转义：</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  escape: /^\\([\\`*&#123;&#125;\[\]()#$+\-.!_&gt;])/,</span></span><br><span class="line"><span class="attr">escape</span>: <span class="regexp">/^\\([`*\[\]()#$+\-.!_&gt;])/</span></span><br></pre></td></tr></table></figure>
+
+<p>修改第20行<code>em</code>变量：</p>
+  <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  em: /^\b_((?:__|[\s\S])+?)_\b|^\*((?:\*\*|[\s\S])+?)\*(?!\*)/,</span></span><br><span class="line"><span class="attr">em</span>: <span class="regexp">/^\*((?:\*\*|[\s\S])+?)\*(?!\*)/</span></span><br></pre></td></tr></table></figure>
+
+<p>记得执行<code>hexo clean</code>清空缓存，重新生成网页，查看是否渲染成功。</p>
+<h2
+id="markdown使用带tooptip的脚注"><del>Markdown使用带Tooptip的脚注</del></h2>
+<p>(<strong>更新</strong>:
+更换渲染器为<code>hexo-renderer-pandoc</code>，不使用<code>hexo-reference</code>，可以自动编号脚注。)</p>
+<p>安装插件<code>hexo-reference</code>，使用方式见 <a
+target="_blank" rel="noopener" href="https://github.com/kchen0x/hexo-reference">hexo-reference
+github主页</a></p>
+<p>缺陷：但只支持使用数字作为引用label，且不能自动编号。</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>参考<a
+target="_blank" rel="noopener" href="https://www.yyyzyyyz.cn/posts/654d8712aff4/">为hexo博客更换pandoc渲染</a><a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a
+target="_blank" rel="noopener" href="https://github.com/next-theme/hexo-filter-mathjax">hexo-filter-mathjax
+github主页</a><a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a
+target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next/issues/1672">https://github.com/iissnan/hexo-theme-next/issues/1672</a><a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>见讨论 <a
+target="_blank" rel="noopener" href="https://github.com/KaTeX/KaTeX/discussions/3708">https://github.com/KaTeX/KaTeX/discussions/3708</a><a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>见讨论 <a
+target="_blank" rel="noopener" href="https://github.com/KaTeX/KaTeX/issues/2798">https://github.com/KaTeX/KaTeX/issues/2798</a><a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>见讨论 <a
+target="_blank" rel="noopener" href="https://github.com/KaTeX/KaTeX/issues/2003">https://github.com/KaTeX/KaTeX/issues/2003</a><a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://maojh15.github.io">maojh15</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://maojh15.github.io/posts/e96c27b831e9/">https://maojh15.github.io/posts/e96c27b831e9/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://maojh15.github.io" target="_blank">maojh15的主页</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/assets/avarta.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/posts/5b3b476dc202/" title="从有限温度场论导出量子力学微扰论能级修正公式"><img class="cover" src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/img/post/2025-05-07-perturbation/G_definition_preview.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">从有限温度场论导出量子力学微扰论能级修正公式</div></div><div class="info-2"><div class="info-item-1">通过有限温度场论的方法推导出量子力学微扰论中的能级修正公式</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/avarta.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">maojh15</div><div class="author-info-description">细推物理须行乐，何用浮名绊此生</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">4</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/maojh15"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/maojh15" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:maojh15@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8pandoc%E8%A7%A3%E6%9E%90markdown"><span class="toc-number">1.</span> <span class="toc-text">使用pandoc解析markdown</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3mathjax%E5%8A%A0%E8%BD%BD%E6%B8%B2%E6%9F%93%E5%85%AC%E5%BC%8F%E8%BF%87%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">解决mathjax加载渲染公式过慢的问题</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#markdown%E4%BB%A3%E7%A0%81%E6%8D%A2%E8%A1%8C%E6%B8%B2%E6%9F%93%E7%BB%93%E6%9E%9C%E4%B9%9F%E6%8D%A2%E8%A1%8C%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">Markdown代码换行渲染结果也换行的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#markdown%E4%B8%AD%E4%B8%AD%E6%96%87%E5%8F%A5%E5%AD%90%E6%8D%A2%E8%A1%8C%E6%B8%B2%E6%9F%93%E7%BB%93%E6%9E%9C%E5%87%BA%E7%8E%B0%E5%A4%9A%E4%BD%99%E7%A9%BA%E6%A0%BC"><span class="toc-number">2.1.</span> <span class="toc-text">markdown中中文句子换行，渲染结果出现多余空格</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#markdown%E5%85%AC%E5%BC%8F%E6%97%A0%E6%B3%95%E6%B8%B2%E6%9F%93"><span class="toc-number">3.</span> <span class="toc-text">Markdown公式无法渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#markdown%E4%BD%BF%E7%94%A8%E5%B8%A6tooptip%E7%9A%84%E8%84%9A%E6%B3%A8"><span class="toc-number">4.</span> <span class="toc-text">Markdown使用带Tooptip的脚注</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/posts/e96c27b831e9/" title="Hexo编辑Markdown的问题及解决方案">Hexo编辑Markdown的问题及解决方案</a><time datetime="2025-05-15T17:26:42.000Z" title="发表于 2025-05-16 01:26:42">2025-05-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5b3b476dc202/" title="从有限温度场论导出量子力学微扰论能级修正公式"><img src= "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/assets/img/post/2025-05-07-perturbation/G_definition_preview.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从有限温度场论导出量子力学微扰论能级修正公式"/></a><div class="content"><a class="title" href="/posts/5b3b476dc202/" title="从有限温度场论导出量子力学微扰论能级修正公式">从有限温度场论导出量子力学微扰论能级修正公式</a><time datetime="2025-05-14T16:40:23.000Z" title="发表于 2025-05-15 00:40:23">2025-05-15</time></div></div></div></div></div></div></main><footer id="footer" style="background: linear-gradient(20deg, #0062be, #925696, #cc426e, #fb0347);"><div id="footer-wrap"><div class="copyright">&copy;2025 By maojh15</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div><div class="footer_custom_text">欢迎留言</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  const loadMathjax = () => {
+    if (!window.MathJax) {
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          tags: 'all',
+        },
+        chtml: {
+          scale: 1.1
+        },
+        options: {
+          enableMenu: true,
+          renderActions: {
+            findScript: [10, doc => {
+              for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
+                const display = !!node.type.match(/; *mode=display/)
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display)
+                const text = document.createTextNode('')
+                node.parentNode.replaceChild(text, node)
+                math.start = {node: text, delim: '', n: 0}
+                math.end = {node: text, delim: '', n: 0}
+                doc.math.push(math)
+              }
+            }, '']
+          }
+        }
+      }
+
+      const script = document.createElement('script')
+      script.src = 'https://cdn.jsdelivr.net/npm/mathjax/es5/tex-mml-chtml.min.js'
+      script.id = 'MathJax-script'
+      script.async = true
+      document.head.appendChild(script)
+    } else {
+      MathJax.startup.document.state(0)
+      MathJax.texReset()
+      MathJax.typesetPromise()
+    }
+  }
+
+  btf.addGlobalFn('encrypt', loadMathjax, 'mathjax')
+  window.pjax ? loadMathjax() : window.addEventListener('load', loadMathjax)
+})()</script><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = {"data-input-position":"top","data-loading":"lazy"}
+
+  const getGiscusTheme = theme => theme === 'dark' ? 'dark' : 'light'
+
+  const createScriptElement = config => {
+    const ele = document.createElement('script')
+    Object.entries(config).forEach(([key, value]) => {
+      ele.setAttribute(key, value)
+    })
+    return ele
+  }
+
+  const loadGiscus = (el = document, key) => {
+    const mappingConfig = isShuoshuo
+      ? { 'data-mapping': 'specific', 'data-term': key }
+      : { 'data-mapping': (option && option['data-mapping']) || 'pathname' }
+
+    const giscusConfig = {
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'maojh15/maojh15.github.io',
+      'data-repo-id': 'R_kgDOOkm2yg',
+      'data-category-id': 'DIC_kwDOOkm2ys4Cp1KE',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true,
+      ...option,
+      ...mappingConfig
+    }
+
+    const scriptElement = createScriptElement(giscusConfig)
+
+    el.querySelector('#giscus-wrap').appendChild(scriptElement)
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyGiscus = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const changeGiscusTheme = theme => {
+    const iframe = document.querySelector('#giscus-wrap iframe')
+    if (iframe) {
+      const message = {
+        giscus: {
+          setConfig: {
+            theme: getGiscusTheme(theme)
+          }
+        }
+      }
+      iframe.contentWindow.postMessage(message, 'https://giscus.app')
+    }
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if (isShuoshuo) {
+    'Giscus' === 'Giscus'
+      ? window.shuoshuoComment = { loadComment: loadGiscus }
+      : window.loadOtherComment = loadGiscus
+    return
+  }
+
+  if ('Giscus' === 'Giscus' || !false) {
+    if (false) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment = loadGiscus
+  }
+})()</script></div><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-show-text.min.js" data-mobile="false" data-text="你好,世界,Hello,World" data-fontsize="15px" data-random="true" async="async"></script><script async data-pjax src="//cn.vercount.one/js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="站内搜索" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
