@@ -120,27 +120,6 @@
   </url>
   
   <url>
-    <loc>https://maojh15.github.io/tags/EM%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://maojh15.github.io/tags/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1/</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://maojh15.github.io/tags/%E9%9A%90%E5%8F%98%E9%87%8F%E6%A8%A1%E5%9E%8B/</loc>
-    <lastmod>2026-07-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://maojh15.github.io/tags/%E7%BE%A4%E8%AE%BA/</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -163,6 +142,27 @@
   
   <url>
     <loc>https://maojh15.github.io/tags/%E8%AE%A1%E7%AE%97%E7%BE%A4%E8%AE%BA/</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://maojh15.github.io/tags/EM%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://maojh15.github.io/tags/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1/</loc>
+    <lastmod>2026-07-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://maojh15.github.io/tags/%E9%9A%90%E5%8F%98%E9%87%8F%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -227,14 +227,14 @@
   </url>
   
   <url>
-    <loc>https://maojh15.github.io/categories/%E9%87%8F%E5%AD%90%E5%9C%BA%E8%AE%BA/</loc>
+    <loc>https://maojh15.github.io/categories/%E7%AE%97%E6%B3%95/AI/</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://maojh15.github.io/categories/%E7%AE%97%E6%B3%95/AI/</loc>
+    <loc>https://maojh15.github.io/categories/%E9%87%8F%E5%AD%90%E5%9C%BA%E8%AE%BA/</loc>
     <lastmod>2026-07-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
